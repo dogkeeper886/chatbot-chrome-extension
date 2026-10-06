@@ -33,16 +33,27 @@ Chatbot and chatflow apps have ChatBot URLs of the form `/chatbot/<token>`. The 
 
 To change the URL later, right-click the icon and choose **Options**.
 
+When you save the URL, Chrome asks to let the extension read and change data on your Dify address. Allow it for **Send to Dify**; the chatbot itself works without it. If you saved the URL before version 2.1.0, open **Options** and click **Save** once more.
+
+## Send to Dify
+
+Select text on any page, right-click it, and choose **Send to Dify**. The side panel opens with the text and its page URL in the chat box. Read it, edit it if needed, and press Enter: the extension never sends a message for you.
+
+If the extension cannot reach the chat box, for example without access to the Dify address, the panel offers the text to copy instead.
+
 ## How it works
 
 | File | Role |
 |---|---|
-| `manifest.json` | Manifest V3; permissions `sidePanel` and `storage` |
-| `background.js` | Opens the side panel when you click the icon |
-| `panel.html`, `panel.js` | The side panel: an iframe of the saved ChatBot URL |
-| `options.html`, `options.js` | Saves the ChatBot URL in `chrome.storage.sync` under `chatbotUrl`, the original extension's key |
+| `manifest.json` | Manifest V3; permissions `sidePanel`, `storage`, `contextMenus` and `scripting`; the Dify address as an optional host permission |
+| `background.js` | Opens the side panel when you click the icon; adds **Send to Dify** to the right-click menu |
+| `panel.html`, `panel.js` | The side panel: an iframe of the saved ChatBot URL; passes sent text to the chat page |
+| `dify-bridge.js` | Runs in the Dify chat page inside the side panel, and fills its chat box |
+| `options.html`, `options.js` | Saves the ChatBot URL in `chrome.storage.sync` under `chatbotUrl`, the original extension's key; asks for the Dify address and registers `dify-bridge.js` for it |
 
-Dify's chat pages can be shown in an iframe, so the extension needs no header rules and no host permissions. The structure follows [chatgpt-panel-chrome-extension](https://github.com/PeterPorzuczek/chatgpt-panel-chrome-extension) (MIT).
+Dify's chat pages can be shown in an iframe, so the extension needs no header rules.
+
+Dify offers no way to put text in its chat box from outside: its `postMessage` messages only toggle the expand button. So `dify-bridge.js` runs in the chat page, as [insidebar-ai](https://github.com/xiaolai/insidebar-ai) does for other chat sites. A Dify server can have any address, so the script is registered at runtime with `chrome.scripting.registerContentScripts`, for the saved URL's address only. It acts only inside this extension's side panel. Dify's chat box is a controlled React textarea, so the script sets its value through the native setter and fires an `input` event. The structure follows [chatgpt-panel-chrome-extension](https://github.com/PeterPorzuczek/chatgpt-panel-chrome-extension) (MIT).
 
 ## License
 
