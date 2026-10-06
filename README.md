@@ -1,33 +1,51 @@
-## Chrome Dify ChatBot插件
+# Chatbot Side Panel for Dify
 
-### Method 1: Chrome Extension Store * [Click to visit](https://chrome.google.com/webstore/detail/dify-chatbot/ceehdapohffmjmkdcifjofadiaoeggaf/related?hl=zh-CN&authuser=0) *
+Opens a [Dify](https://github.com/langgenius/dify) chatbot in Chrome's side panel, beside any page.
 
-### Method 2: Load in Developer Mode Locally
+This fork continues [langgenius/chatbot-chrome-extension](https://github.com/langgenius/chatbot-chrome-extension), the "Dify Chatbot" extension that Dify's **Embed** dialog links to. That repository is archived. Its extension injects a chat bubble into each page, which causes the problems its users report: the bubble often does not appear, the chat window cannot be resized, and the page's styles can hide the chat's header.
 
-- Go to Chrome browser extension management, you can directly access [chrome://extensions/](chrome://extensions/)
-- Enable "Developer mode" and click "Load unpacked extension"
+This version shows the chatbot in Chrome's side panel instead. The panel belongs to the browser, not the page, so:
 
-![img-1.png](images/img-1.png)
+| Original problem | Side panel |
+|---|---|
+| The bubble often does not appear | No bubble: click the toolbar icon |
+| Fixed size | Drag the panel's edge to resize it |
+| Page styles and frames break the chat | The chat runs in its own panel, apart from the page |
+| One chat window per page | The panel stays open across tabs and pages |
 
-- Then open the root directory of the extension source file
-    - third-party
-        - chrome plug-in
-            - content.js          Floating button JS script
-            - favicon.png         Extension icon
-            - manifest.json       Extension description file
-            - options.css         Extension configuration page style file
-            - options.html        Extension configuration static HTML page
-            - options.js          Extension configuration JS script
+It needs Chrome 114 or later.
 
-### After importing the extension, subsequent configurations are the same
-- Create Dify application configuration, click on "Embed" in the application overview, switch to the Chrome browser extension installation view, click the copy button to get the ChatBot URL, as shown in the figure:
+## Tested with
 
-![img-2.png](images/img-2.png)
-- Click "Save" and confirm the prompt to successfully configure
+| Part | Version |
+|---|---|
+| Dify | 1.17.1, self-hosted with Docker Compose, served over `http://` |
+| Dify app | An **Agent** app (Agents, BETA), with custom tools; ChatBot URL `http://<dify-host>/agent/<token>` |
+| Chrome | 154 on Linux |
 
-![img-3.png](images/img-3.png)
+Chatbot and chatflow apps have ChatBot URLs of the form `/chatbot/<token>`. The extension shows any of these pages the same way, but only the Agent app has been tested.
 
-- Restart the browser to ensure that all pages are refreshed successfully
-- Dify chatbot floating bar can be loaded normally on any page in Chrome, if you need to change the chatbot, just change the ChatBot URL
+## Set up
 
-![img-4.png](images/img-4.png)
+1. In Dify, open the app's **Embed** dialog, choose the Chrome extension, and copy the **ChatBot URL**. For an Agent app, the dialog is under **Access Point → Embed Into Site**.
+2. In Chrome, open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and choose this folder.
+3. Pin **Chatbot Side Panel for Dify** from the puzzle-piece menu, then click its icon. The first time, the side panel links to the settings page: paste the URL there and click **Save**. The panel loads the chatbot at once.
+
+To change the URL later, right-click the icon and choose **Options**.
+
+## How it works
+
+| File | Role |
+|---|---|
+| `manifest.json` | Manifest V3; permissions `sidePanel` and `storage` |
+| `background.js` | Opens the side panel when you click the icon |
+| `panel.html`, `panel.js` | The side panel: an iframe of the saved ChatBot URL |
+| `options.html`, `options.js` | Saves the ChatBot URL in `chrome.storage.sync` under `chatbotUrl`, the original extension's key |
+
+Dify's chat pages can be shown in an iframe, so the extension needs no header rules and no host permissions. The structure follows [chatgpt-panel-chrome-extension](https://github.com/PeterPorzuczek/chatgpt-panel-chrome-extension) (MIT).
+
+## License
+
+The code from the side panel rewrite onward is under the [MIT License](LICENSE). The upstream repository has no license, so the files in the commits before the rewrite remain with their original authors, listed in `AUTHORERS`. The rewrite contains none of that code.
+
+This project is not affiliated with Dify or LangGenius.

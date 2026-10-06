@@ -1,45 +1,21 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-  <title>Dify Chatbot Extension</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="./tailwind.css" rel="stylesheet">
-</head>
-
-<body class="bg-gray-100 py-4 px-4 w-128">
-  <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-4">
-    <h2 class="text-2xl font-semibold mb-4">Dify Chatbot Extension</h2>
-    <form>
-      <div class="mb-4 flex items-center">
-        <div class="w-1/4">
-          <label for="chatbot-url" class="block font-semibold text-gray-700">ChatBot URL</label>
-        </div>
-        <div class="w-3/4">
-          <input type="text" id="chatbot-url" name="base-url" value=""
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400"
-            placeholder="https://udify.app/chatbot/7CQBa5yyvYLSkZtx">
-        </div>
-      </div>
-
-      <div class="mb-4 flex items-center">
-        <div class="w-1/4"></div>
-        <div class="w-3/4">
-          <span id="error-tip" class="text-red-600"></span>
-        </div>
-      </div>
-
-      <div class="mb-4 flex items-center">
-        <div class="w-1/4"></div>
-        <div class="w-3/4">
-          <button id="save-button"
-            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Save</button>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <script src="options.js"></script>
-</body>
-
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chatbot Side Panel for Dify</title>
+    <style>
+      body { margin: 2rem; font-family: sans-serif; max-width: 40rem; }
+      input { width: 100%; padding: 0.5rem; box-sizing: border-box; }
+      button { margin-top: 0.75rem; padding: 0.5rem 1rem; }
+      #status { margin-left: 0.75rem; }
+    </style>
+  </head>
+  <body>
+    <h1>Chatbot Side Panel for Dify</h1>
+    <label for="chatbot-url">ChatBot URL</label>
+    <p>In Dify, open the app's <b>Embed</b> dialog, choose the Chrome extension, and copy the ChatBot URL.</p>
+    <input id="chatbot-url" type="url" placeholder="https://<dify-host>/agent/<token> or /chatbot/<token>" />
+    <button id="save">Save</button><span id="status"></span>
+    <script src="options.js"></script>
+  </body>
 </html>

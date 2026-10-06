@@ -1,29 +1,17 @@
 {
   "manifest_version": 3,
-  "name": "Dify Chatbot",
-  "version": "1.5",
-  "description": "This is a chrome extension to inject a dify chatbot on any pages",
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }
-  ],
-  "permissions": ["webRequest", "storage"],
-  "action": {
-      "default_popup": "options.html",
-      "default_icon": {
-        "16": "images/16.png",
-        "32": "images/32.png",
-        "48": "images/48.png",
-        "128": "images/128.png"
-
-      }
+  "name": "Chatbot Side Panel for Dify",
+  "version": "2.0.0",
+  "description": "Opens a Dify chatbot in Chrome's side panel, beside any page.",
+  "permissions": ["sidePanel", "storage"],
+  "background": {
+    "service_worker": "background.js"
   },
-  "icons": {
-    "16": "images/16.png",
-    "32": "images/32.png",
-    "48": "images/48.png",
-    "128": "images/128.png"
+  "side_panel": {
+    "default_path": "panel.html"
+  },
+  "options_page": "options.html",
+  "action": {
+    "default_title": "Open the Dify chatbot"
   }
 }
