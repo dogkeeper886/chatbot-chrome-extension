@@ -66,6 +66,12 @@ window.addEventListener('message', (event) => {
   }
 });
 
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === 'bridge-registered' && chatFrame && !bridgeReady) {
+    chatFrame.src = chatFrame.src;
+  }
+});
+
 chrome.storage.sync.get('chatbotUrl', (result) => {
   show(result.chatbotUrl);
   deliverPendingText();

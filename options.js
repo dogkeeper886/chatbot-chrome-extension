@@ -13,25 +13,10 @@ document.getElementById('save').addEventListener('click', async () => {
   }
   const origin = new URL(chatbotUrl).origin;
   // Ask first: Chrome allows a permission request only within the click.
+  // The service worker registers dify-bridge.js once the address is granted.
   const granted = await chrome.permissions.request({ origins: [`${origin}/*`] });
   await chrome.storage.sync.set({ chatbotUrl });
-  if (!granted) {
-    status.textContent = `Saved. Without access to ${origin}, Send to Dify cannot fill the chat box.`;
-    return;
-  }
-  await registerBridge(origin);
-  status.textContent = 'Saved.';
+  status.textContent = granted
+    ? 'Saved.'
+    : `Saved. Without access to ${origin}, Send to Dify cannot fill the chat box.`;
 });
-
-// Runs dify-bridge.js in the Dify chat page, so "Send to Dify" can fill its chat box.
-async function registerBridge(origin) {
-  await chrome.scripting.unregisterContentScripts({ ids: ['dify-bridge'] }).catch(() => {});
-  await chrome.scripting.registerContentScripts([
-    {
-      id: 'dify-bridge',
-      matches: [`${origin}/*`],
-      js: ['dify-bridge.js'],
-      allFrames: true,
-    },
-  ]);
-}
