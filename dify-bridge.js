@@ -15,7 +15,8 @@ if (window.top !== window && location.ancestorOrigins[0] === extensionOrigin) {
 // Dify renders the chat box after it loads, so wait up to 10 seconds for it.
 async function fillChatBox(text) {
   for (let attempt = 0; attempt < 40; attempt++) {
-    const chatBox = [...document.querySelectorAll('textarea')]
+    // Skip the hidden copy that react-textarea-autosize adds to measure text height.
+    const chatBox = [...document.querySelectorAll('textarea:not([aria-hidden="true"])')]
       .filter((box) => !box.disabled && !box.readOnly && box.offsetParent !== null)
       .at(-1);
     if (chatBox) {
