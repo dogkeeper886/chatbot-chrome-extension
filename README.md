@@ -38,7 +38,7 @@ Hover over the icon to see the saved URL. To change it, right-click the icon and
 | File | Role |
 |---|---|
 | `manifest.json` | Manifest V3; permissions `sidePanel` and `storage` |
-| `background.js` | Opens the side panel when you click the icon |
+| `background.js` | Opens the side panel when you click the icon, and shows the saved ChatBot URL in the icon's tooltip |
 | `panel.html`, `panel.js` | The side panel: an iframe of the saved ChatBot URL |
 | `options.html`, `options.js` | Saves the ChatBot URL in `chrome.storage.sync` under `chatbotUrl`, the original extension's key |
 
