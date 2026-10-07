@@ -31,14 +31,14 @@ Chatbot and chatflow apps have ChatBot URLs of the form `/chatbot/<token>`. The 
 2. In Chrome, open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and choose this folder.
 3. Pin **Chatbot Side Panel for Dify** from the puzzle-piece menu, then click its icon. The first time, the side panel links to the settings page: paste the URL there and click **Save**. The panel loads the chatbot at once.
 
-To change the URL later, right-click the icon and choose **Options**.
+Hover over the icon to see the saved URL. To change it, right-click the icon and choose **Options**.
 
 ## How it works
 
 | File | Role |
 |---|---|
 | `manifest.json` | Manifest V3; permissions `sidePanel` and `storage` |
-| `background.js` | Opens the side panel when you click the icon |
+| `background.js` | Opens the side panel when you click the icon, and shows the saved ChatBot URL in the icon's tooltip |
 | `panel.html`, `panel.js` | The side panel: an iframe of the saved ChatBot URL |
 | `options.html`, `options.js` | Saves the ChatBot URL in `chrome.storage.sync` under `chatbotUrl`, the original extension's key |
 
