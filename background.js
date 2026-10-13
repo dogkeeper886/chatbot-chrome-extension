@@ -26,7 +26,8 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId !== 'send-selection') return;
   // Open the panel first: sidePanel.open must run within the click's user gesture.
-  chrome.sidePanel.open({ windowId: tab.windowId });
+  // A click inside the side panel has no tab, and the panel is open already.
+  if (tab) chrome.sidePanel.open({ windowId: tab.windowId });
   // The panel picks the text up when its chat box is ready.
   chrome.storage.session.set({ pendingText: `${info.selectionText}\n\nSource: ${info.pageUrl}` });
 });
@@ -55,5 +56,19 @@ async function registerBridge() {
 syncBridge();
 chrome.permissions.onAdded.addListener(syncBridge);
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'sync' && changes.chatbotUrl) syncBridge();
+  if (area !== 'sync' || !changes.chatbotUrl) return;
+  syncBridge();
+  dropOldAccess(changes.chatbotUrl.oldValue, changes.chatbotUrl.newValue);
 });
+
+// Give up access to the earlier Dify address when the ChatBot URL moves to another host.
+// A change of port alone keeps it, in case Chrome matches granted addresses without the port.
+function dropOldAccess(oldUrl, newUrl) {
+  if (!oldUrl) return;
+  const site = ({ protocol, hostname }) => `${protocol}//${hostname}`;
+  const old = new URL(oldUrl);
+  if (newUrl && site(new URL(newUrl)) === site(old)) return;
+  chrome.permissions
+    .remove({ origins: [`${old.origin}/*`] })
+    .catch((error) => console.error(error));
+}

@@ -33,7 +33,7 @@ Chatbot and chatflow apps have ChatBot URLs of the form `/chatbot/<token>`. The 
 
 Hover over the icon to see the saved URL. To change it, right-click the icon and choose **Options**.
 
-When you save the URL, Chrome asks to let the extension read and change data on your Dify address. Allow it for **Send to Dify**; the chatbot itself works without it. If you saved the URL before version 2.1.0, open **Options** and click **Save** once more to grant that access.
+When you save the URL, Chrome asks to let the extension read and change data on your Dify address. Allow it for **Send to Dify**; the chatbot itself works without it. If you saved the URL before version 2.1.0, open **Options** and click **Save** once more to grant that access. When the URL moves to another host, the extension gives up its access to the earlier one.
 
 ## Send to Dify
 
@@ -46,7 +46,7 @@ If the extension cannot reach the chat box, for example without access to the Di
 | File | Role |
 |---|---|
 | `manifest.json` | Manifest V3; permissions `sidePanel`, `storage`, `contextMenus` and `scripting`; the Dify address as an optional host permission |
-| `background.js` | Opens the side panel when you click the icon; shows the saved ChatBot URL in the icon's tooltip; adds **Send to Dify** to the right-click menu; registers `dify-bridge.js` for the saved URL's address |
+| `background.js` | Opens the side panel when you click the icon; shows the saved ChatBot URL in the icon's tooltip; adds **Send to Dify** to the right-click menu; registers `dify-bridge.js` for the saved URL's address, and gives up access to an earlier one |
 | `panel.html`, `panel.js` | The side panel: an iframe of the saved ChatBot URL; passes sent text to the chat page |
 | `dify-bridge.js` | Runs in the Dify chat page inside the side panel, and fills its chat box |
 | `options.html`, `options.js` | Saves the ChatBot URL in `chrome.storage.sync` under `chatbotUrl`, the original extension's key, and asks for access to its address |
