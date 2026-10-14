@@ -37,7 +37,17 @@ When you save the URL, Chrome asks to let the extension read and change data on 
 
 ## Send to Dify
 
-Select text on any page, right-click it, and choose **Send to Dify**. The side panel opens with the text and its page URL in the chat box. Read it, edit it if needed, and press Enter: the extension never sends a message for you.
+Select text on any page, right-click it, and open **Send to Dify**. Choose **Selected text**, and the side panel opens with the text and its page URL in the chat box. Read it, edit it if needed, and press Enter: the extension never sends a message for you.
+
+The same menu lists skills. A skill puts its prompt in the chat box, with the selected text in the prompt's `{{query}}` place:
+
+| Skill | Prompt |
+|---|---|
+| **Rewrite negative to affirmative** | Rewrite negative to affirmative form keeps same meaning for following paragraph: |
+| **Strike through redundancy and bloat** | Strike though redundancy and bloat for following paragraph: |
+| **Bold subject, italic action** | Bold subject, italic its action for phrases in following paragraph: |
+
+The skills are the `skills` list in `background.js`.
 
 If the extension cannot reach the chat box, for example without access to the Dify address, the panel offers the text to copy instead.
 
@@ -46,7 +56,7 @@ If the extension cannot reach the chat box, for example without access to the Di
 | File | Role |
 |---|---|
 | `manifest.json` | Manifest V3; permissions `sidePanel`, `storage`, `contextMenus` and `scripting`; the Dify address as an optional host permission |
-| `background.js` | Opens the side panel when you click the icon; shows the saved ChatBot URL in the icon's tooltip; adds **Send to Dify** to the right-click menu; registers `dify-bridge.js` for the saved URL's address, and gives up access to an earlier one |
+| `background.js` | Opens the side panel when you click the icon; shows the saved ChatBot URL in the icon's tooltip; adds **Send to Dify** and its skills to the right-click menu; registers `dify-bridge.js` for the saved URL's address, and gives up access to an earlier one |
 | `panel.html`, `panel.js` | The side panel: an iframe of the saved ChatBot URL; passes sent text to the chat page |
 | `dify-bridge.js` | Runs in the Dify chat page inside the side panel, and fills its chat box |
 | `options.html`, `options.js` | Saves the ChatBot URL in `chrome.storage.sync` under `chatbotUrl`, the original extension's key, and asks for access to its address |

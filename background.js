@@ -15,21 +15,49 @@ chrome.storage.onChanged.addListener((changes) => {
   if (changes.chatbotUrl) showUrlInTitle(changes.chatbotUrl.newValue);
 });
 
+// Each skill fills the chat box with its prompt, the selected text in place of {{query}}.
+const skills = [
+  {
+    id: 'skill-affirmative',
+    title: 'Rewrite negative to affirmative',
+    prompt: 'Rewrite negative to affirmative form keeps same meaning for following paragraph:\n\n"{{query}}"',
+  },
+  {
+    id: 'skill-strike',
+    title: 'Strike through redundancy and bloat',
+    prompt: 'Strike though redundancy and bloat for following paragraph:\n\n"{{query}}"',
+  },
+  {
+    id: 'skill-emphasis',
+    title: 'Bold subject, italic action',
+    prompt: 'Bold subject, italic its action for phrases in following paragraph:\n\n"{{query}}"',
+  },
+];
+
 chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({ id: 'send', title: 'Send to Dify', contexts: ['selection'] });
   chrome.contextMenus.create({
     id: 'send-selection',
-    title: 'Send to Dify',
+    parentId: 'send',
+    title: 'Selected text',
     contexts: ['selection'],
   });
+  for (const { id, title } of skills) {
+    chrome.contextMenus.create({ id, parentId: 'send', title, contexts: ['selection'] });
+  }
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId !== 'send-selection') return;
+  const skill = skills.find(({ id }) => id === info.menuItemId);
+  if (!skill && info.menuItemId !== 'send-selection') return;
   // Open the panel first: sidePanel.open must run within the click's user gesture.
   // A click inside the side panel has no tab, and the panel is open already.
   if (tab) chrome.sidePanel.open({ windowId: tab.windowId });
   // The panel picks the text up when its chat box is ready.
-  chrome.storage.session.set({ pendingText: `${info.selectionText}\n\nSource: ${info.pageUrl}` });
+  const pendingText = skill
+    ? skill.prompt.replace('{{query}}', () => info.selectionText)
+    : `${info.selectionText}\n\nSource: ${info.pageUrl}`;
+  chrome.storage.session.set({ pendingText });
 });
 
 // dify-bridge.js runs in the Dify chat page, so "Send to Dify" can fill its chat box.
