@@ -39,20 +39,20 @@ When you save the URL, Chrome asks to let the extension read and change data on 
 
 Select text on any page, right-click it, and open **Send to Dify**. Choose **Selected text**, and the side panel opens with the text and its page URL in the chat box. Read it, edit it if needed, and press Enter: the extension never sends a message for you.
 
-The same menu lists skills, under **Sentence level** and **Paragraph level**. A skill puts its prompt in the chat box, with the selected text in the prompt's `{{query}}` place:
+The same menu lists skills, under **Word level**, **Sentence level** and **Paragraph level**. A skill puts its prompt in the chat box, with the selected text in the prompt's `{{query}}` place:
 
 | Level | Skill | Prompt |
 |---|---|---|
-| Sentence | **Rewrite negative to affirmative** | Rewrite negative to affirmative form keeps same meaning for following paragraph: |
-| Sentence | **Strike through redundancy and bloat** | Strike though redundancy and bloat for following paragraph: |
-| Sentence | **Bold subject, italic action** | Bold subject, italic its action for phrases in following paragraph: |
+| Word | **Rewrite negative to affirmative** | Rewrite negative to affirmative form keeps same meaning for following paragraph: |
+| Word | **Strike through redundancy and bloat** | Strike though redundancy and bloat for following paragraph: |
+| Word | **Bold subject, italic action** | Bold subject, italic its action for phrases in following paragraph: |
 | Sentence | **Central character as subject, action as verb** | Central character in subject position, important action in the verb for following paragraph: |
 | Sentence | **Complexity in the stress position** | Locate complexity at the end of sentences, in the stress position for following paragraph: |
 | Paragraph | **Use nominalizations effectively** | Use nominalizations effectively for following paragraph: |
 | Paragraph | **Cohesion: old to new information** | Create cohesion by organizing information across sentences from old to new for following paragraph: |
 | Paragraph | **Coherence: consistent topics** | Create coherence with consistent topics at start of sentences for following paragraph: |
 
-The skills are the `skills` list in `background.js`, and `groups` holds the two levels.
+The skills are the `skills` list in `background.js`, and `groups` holds the three levels.
 
 If the extension cannot reach the chat box, for example without access to the Dify address, the panel offers the text to copy instead.
 

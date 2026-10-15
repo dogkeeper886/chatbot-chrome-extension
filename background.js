@@ -17,6 +17,7 @@ chrome.storage.onChanged.addListener((changes) => {
 
 // The menu holds the skills in these groups.
 const groups = [
+  { id: 'word', title: 'Word level' },
   { id: 'sentence', title: 'Sentence level' },
   { id: 'paragraph', title: 'Paragraph level' },
 ];
@@ -25,19 +26,19 @@ const groups = [
 const skills = [
   {
     id: 'skill-affirmative',
-    group: 'sentence',
+    group: 'word',
     title: 'Rewrite negative to affirmative',
     prompt: 'Rewrite negative to affirmative form keeps same meaning for following paragraph:\n\n"{{query}}"',
   },
   {
     id: 'skill-strike',
-    group: 'sentence',
+    group: 'word',
     title: 'Strike through redundancy and bloat',
     prompt: 'Strike though redundancy and bloat for following paragraph:\n\n"{{query}}"',
   },
   {
     id: 'skill-emphasis',
-    group: 'sentence',
+    group: 'word',
     title: 'Bold subject, italic action',
     prompt: 'Bold subject, italic its action for phrases in following paragraph:\n\n"{{query}}"',
   },
