@@ -15,22 +15,61 @@ chrome.storage.onChanged.addListener((changes) => {
   if (changes.chatbotUrl) showUrlInTitle(changes.chatbotUrl.newValue);
 });
 
+// The menu holds the skills in these groups.
+const groups = [
+  { id: 'sentence', title: 'Sentence level' },
+  { id: 'paragraph', title: 'Paragraph level' },
+];
+
 // Each skill fills the chat box with its prompt, the selected text in place of {{query}}.
 const skills = [
   {
     id: 'skill-affirmative',
+    group: 'sentence',
     title: 'Rewrite negative to affirmative',
     prompt: 'Rewrite negative to affirmative form keeps same meaning for following paragraph:\n\n"{{query}}"',
   },
   {
     id: 'skill-strike',
+    group: 'sentence',
     title: 'Strike through redundancy and bloat',
     prompt: 'Strike though redundancy and bloat for following paragraph:\n\n"{{query}}"',
   },
   {
     id: 'skill-emphasis',
+    group: 'sentence',
     title: 'Bold subject, italic action',
     prompt: 'Bold subject, italic its action for phrases in following paragraph:\n\n"{{query}}"',
+  },
+  {
+    id: 'skill-character',
+    group: 'sentence',
+    title: 'Central character as subject, action as verb',
+    prompt: 'Central character in subject position, important action in the verb for following paragraph:\n\n"{{query}}"',
+  },
+  {
+    id: 'skill-nominalization',
+    group: 'paragraph',
+    title: 'Use nominalizations effectively',
+    prompt: 'Use nominalizations effectively for following paragraph:\n\n"{{query}}"',
+  },
+  {
+    id: 'skill-cohesion',
+    group: 'paragraph',
+    title: 'Cohesion: old to new information',
+    prompt: 'Create cohesion by organizing information across sentences from old to new for following paragraph:\n\n"{{query}}"',
+  },
+  {
+    id: 'skill-coherence',
+    group: 'paragraph',
+    title: 'Coherence: consistent topics',
+    prompt: 'Create coherence with consistent topics at start of sentences for following paragraph:\n\n"{{query}}"',
+  },
+  {
+    id: 'skill-stress',
+    group: 'sentence',
+    title: 'Complexity in the stress position',
+    prompt: 'Locate complexity at the end of sentences, in the stress position for following paragraph:\n\n"{{query}}"',
   },
 ];
 
@@ -42,8 +81,11 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Selected text',
     contexts: ['selection'],
   });
-  for (const { id, title } of skills) {
+  for (const { id, title } of groups) {
     chrome.contextMenus.create({ id, parentId: 'send', title, contexts: ['selection'] });
+  }
+  for (const { id, group, title } of skills) {
+    chrome.contextMenus.create({ id, parentId: group, title, contexts: ['selection'] });
   }
 });
 
