@@ -3,4 +3,4 @@ Review sentences:
 2. On the step 1 result, strike through redundancy and bloat.
 
 Input text:
-{{query}}
+"{{query}}"
