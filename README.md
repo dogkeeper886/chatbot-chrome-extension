@@ -44,26 +44,65 @@ The same menu lists skills, under **Word level**, **Sentence level** and **Parag
 | Level | Skill | Prompt |
 |---|---|---|
 | Word | **Rewrite negative to affirmative** | Rewrite negative to affirmative form keeps same meaning for following paragraph: |
-| Word | **Strike through redundancy and bloat** | Strike though redundancy and bloat for following paragraph: |
+| Word | **Strike through redundancy and bloat** | Strike through redundancy and bloat for following paragraph: |
 | Word | **Bold subject, italic action** | Bold subject, italic its action for phrases in following paragraph: |
 | Sentence | **Central character as subject, action as verb** | Central character in subject position, important action in the verb for following paragraph: |
 | Sentence | **Complexity in the stress position** | Locate complexity at the end of sentences, in the stress position for following paragraph: |
 | Paragraph | **Use nominalizations effectively** | Use nominalizations effectively for following paragraph: |
-| Paragraph | **Cohesion: old to new information** | Create cohesion by organizing information across sentences from old to new for following paragraph: |
-| Paragraph | **Coherence: consistent topics** | Create coherence with consistent topics at start of sentences for following paragraph: |
+| Paragraph | **Cohesion, old to new information** | Create cohesion by organizing information across sentences from old to new for following paragraph: |
+| Paragraph | **Coherence, consistent topics** | Create coherence with consistent topics at start of sentences for following paragraph: |
 
-The skills are the `skills` list in `background.js`, and `groups` holds the three levels.
+The menu comes from the [menu folder](#the-menu-folder).
 
 If the extension cannot reach the chat box, for example without access to the Dify address, the panel offers the text to copy instead.
+
+## The menu folder
+
+The right-click menu comes from the `menu/` folder, so you add a skill by adding a file.
+
+```
+menu/
+└── Send to Dify/
+    ├── 1 Selected text.md
+    ├── 2 Word level/
+    │   ├── 1 Rewrite negative to affirmative.md
+    │   ├── 2 Strike through redundancy and bloat.md
+    │   └── 3 Bold subject, italic action.md
+    ├── 3 Sentence level/
+    │   ├── 1 Central character as subject, action as verb.md
+    │   └── 2 Complexity in the stress position.md
+    └── 4 Paragraph level/
+        ├── 1 Use nominalizations effectively.md
+        ├── 2 Cohesion, old to new information.md
+        └── 3 Coherence, consistent topics.md
+```
+
+- A folder is a submenu, and a `.md` file is an item.
+- A number and a space before a name set the order and stay out of the title: `2 Word level` shows as **Word level**.
+- In a file's text, `{{query}}` stands for the selected text and `{{url}}` for the page's address. `1 Selected text.md` holds:
+
+  ```
+  {{query}}
+
+  Source: {{url}}
+  ```
+
+- Keep `:` and the other characters Windows forbids out of the names, so the folder checks out on Windows.
+
+Each click reads its file afresh, so the next click sends a file's new text. After you add, rename or delete a file, reload the extension: click the reload icon on its card at `chrome://extensions`.
+
+Only an extension page can list the extension's folders, so the extension builds the menu in a background tab that closes when done. The tab flashes each time the extension installs or reloads and each time Chrome updates. With every Chrome window closed, it opens a window of its own. The builder relies on `chrome.runtime.getPackageDirectoryEntry`, an API from Chrome Apps; if Chrome drops it, the menu comes up empty.
 
 ## How it works
 
 | File | Role |
 |---|---|
 | `manifest.json` | Manifest V3; permissions `sidePanel`, `storage`, `contextMenus` and `scripting`; the Dify address as an optional host permission |
-| `background.js` | Opens the side panel when you click the icon; shows the saved ChatBot URL in the icon's tooltip; adds **Send to Dify** and its skills to the right-click menu; registers `dify-bridge.js` for the saved URL's address, and gives up access to an earlier one |
+| `background.js` | Opens the side panel when you click the icon; shows the saved ChatBot URL in the icon's tooltip; opens `menu-builder.html` to build the right-click menu, and turns a menu click into text for the panel; registers `dify-bridge.js` for the saved URL's address, and gives up access to an earlier one |
 | `panel.html`, `panel.js` | The side panel: an iframe of the saved ChatBot URL; passes sent text to the chat page |
 | `dify-bridge.js` | Runs in the Dify chat page inside the side panel, and fills its chat box |
+| `menu-builder.html`, `menu-builder.js` | Build the right-click menu from `menu/` |
+| `menu/` | The right-click menu: a folder per submenu, a `.md` file per item |
 | `options.html`, `options.js` | Saves the ChatBot URL in `chrome.storage.sync` under `chatbotUrl`, the original extension's key, and asks for access to its address |
 
 Dify's chat pages can be shown in an iframe, so the extension needs no header rules.
